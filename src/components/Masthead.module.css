@@ -95,3 +95,19 @@
     justify-content: flex-start;
   }
 }
+/* Add this to the bottom of the file */
+.masthead::after {
+  content: '';
+  display: block;
+  height: 4px;
+  margin-top: 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      var(--ink) 0px,
+      var(--ink) 2px,
+      transparent 2px,
+      transparent 6px
+    );
+  opacity: 0.15;
+}
