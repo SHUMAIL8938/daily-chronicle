@@ -1,0 +1,114 @@
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Design tokens ── */
+:root {
+  --ink:        #1a1208;
+  --ink-mid:    #3d3020;
+  --ink-light:  #6b5c44;
+  --paper:      #f5f0e8;
+  --paper-dark: #ede6d4;
+  --paper-mid:  #e8dfc8;
+  --rule:       #c8b89a;
+  --rule-dark:  #8a7560;
+  --accent:     #8b1a1a;
+  --col-gap:    clamp(16px, 2vw, 28px);
+
+  --serif:      'Playfair Display', Georgia, serif;
+  --body-serif: 'Libre Baskerville', Georgia, serif;
+  --sans:       'Source Sans 3', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--paper-dark);
+  color: var(--ink);
+  font-family: var(--body-serif);
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* Paper noise texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Shared animations ── */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ── Skeleton ── */
+.skel {
+  background: linear-gradient(90deg, var(--paper-mid) 25%, var(--paper) 50%, var(--paper-mid) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: 2px;
+}
+
+/* ── Section rule ── */
+.section-rule {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0 16px;
+}
+.section-rule span {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink-mid);
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+.section-rule::before,
+.section-rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule-dark);
+}
+
+/* ── Print ── */
+@media print {
+  body::before { display: none; }
+}
+/* Hide scrollbars everywhere */
+* {
+  scrollbar-width: none;
+}
+*::-webkit-scrollbar {
+  display: none;
+}

@@ -1,0 +1,29 @@
+.banner {
+  padding: 10px 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.banner code {
+  font-family: monospace;
+  background: rgba(0,0,0,0.08);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.warn {
+  background: #fffbeb;
+  border: 1px solid #d97706;
+  border-left: 4px solid #d97706;
+  color: #78350f;
+}
+
+.info {
+  background: #f0fdf4;
+  border: 1px solid #22c55e;
+  border-left: 4px solid #22c55e;
+  color: #15803d;
+}

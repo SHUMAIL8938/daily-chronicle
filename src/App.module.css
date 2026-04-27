@@ -1,0 +1,18 @@
+.pageWrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 clamp(12px, 3vw, 40px);
+}
+
+.frontGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--col-gap);
+  margin-bottom: 28px;
+}
+
+@media (max-width: 760px) {
+  .frontGrid {
+    grid-template-columns: 1fr;
+  }
+}
