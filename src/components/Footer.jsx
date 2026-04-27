@@ -47,11 +47,11 @@ export default function Footer() {
       <p>
         Headlines sourced via{' '}
         <a href="https://newsapi.org" target="_blank" rel="noopener noreferrer">NewsAPI.org</a>
-        {' · '}© {year} The Daily Chronicle
+        {' · '}© {year} The Daily Chronicle - Shumail Ahmad Samar
         <br />
         Headlines &amp; snippets displayed under fair use — full articles at source.
         <br />
-        <a href="mailto:dmca@dailychronicle.example">DMCA / Copyright</a>
+        <a href="mailto:shumailahmad8938@gmail.com">DMCA / Copyright</a>
       </p>
     </footer>
   )
