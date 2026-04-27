@@ -1,5 +1,4 @@
-# The Daily Chronicle — React Edition
-
+# The Daily Chronicle
 A newspaper-style live news site built with React + Vite, deployed on Vercel with a serverless NewsAPI proxy.
 
 ---
