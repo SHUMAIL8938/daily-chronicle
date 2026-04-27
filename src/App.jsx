@@ -11,7 +11,7 @@ import RegionalSection from "./components/RegionalSection";
 import Skeleton from "./components/Skeleton";
 import Footer from "./components/Footer";
 import styles from "./App.module.css";
-
+import { Analytics } from "@vercel/analytics/react";
 export default function App() {
   const [category, setCategory] = useState("general");
   const { articles, status, error, lastUpdated, refresh } = useNews(category);
@@ -50,6 +50,7 @@ export default function App() {
       </main>
 
       <Footer />
+      <Analytics />
     </div>
   );
 }
