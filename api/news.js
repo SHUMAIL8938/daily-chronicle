@@ -1,7 +1,3 @@
-// api/news.js — Vercel serverless function
-// Proxies NewsAPI so the API key never touches the browser and CORS is bypassed.
-// Set NEWSAPI_KEY in Vercel → Project → Settings → Environment Variables.
-
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' })
@@ -12,12 +8,19 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'NEWSAPI_KEY environment variable is not set.' })
   }
 
-  const { category = 'general', country = 'us', pageSize = 20 } = req.query
+  const { category, country = 'us', pageSize = 20, q, sortBy } = req.query
 
-  const params = new URLSearchParams({ country, pageSize, apiKey })
-  if (category !== 'general') params.set('category', category)
+  let upstream
 
-  const upstream = `https://newsapi.org/v2/top-headlines?${params}`
+  if (q) {
+    const params = new URLSearchParams({ q, pageSize, apiKey })
+    if (sortBy) params.set('sortBy', sortBy)
+    upstream = `https://newsapi.org/v2/everything?${params}`
+  } else {
+    const params = new URLSearchParams({ country, pageSize, apiKey })
+    if (category && category !== 'general') params.set('category', category)
+    upstream = `https://newsapi.org/v2/top-headlines?${params}`
+  }
 
   try {
     const upstreamRes = await fetch(upstream)
