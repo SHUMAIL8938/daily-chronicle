@@ -19,7 +19,7 @@ function SportsCard({ article, delay }) {
           loading="lazy"
           onError={(e) => { e.currentTarget.src = FALLBACK_IMG }}
         />
-        <div className={styles.sportTag}>⚽ Football</div>
+        <div className={styles.sportTag}>Football</div>
       </div>
       <div className={styles.body}>
         <div className={styles.kicker}>{sourceName(article)}</div>
@@ -37,8 +37,8 @@ export default function SportsSection() {
   const [tab, setTab] = useState('soccer')
 
   const TABS = [
-    { key: 'soccer',   label: '⚽ Soccer',   query: 'soccer OR football OR FIFA OR Premier League OR Champions League' },
-    { key: 'nfl',      label: '🏈 NFL',      query: 'NFL OR American football OR touchdown' },
+    { key: 'soccer',   label: 'Football',   query: 'soccer OR football OR FIFA OR Premier League OR Champions League' },
+    { key: 'nfl',      label: 'NFL',      query: 'NFL OR American football OR touchdown' },
   ]
 
   useEffect(() => {
