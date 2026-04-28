@@ -8,17 +8,19 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'NEWSAPI_KEY environment variable is not set.' })
   }
 
-  const { category, country = 'us', pageSize = 20, q, sortBy } = req.query
+  const { category, country = 'us', pageSize = 20, q, sortBy, language = 'en' } = req.query
 
   let upstream
 
   if (q) {
-    const params = new URLSearchParams({ q, pageSize, apiKey })
+    const params = new URLSearchParams({ q, pageSize, apiKey, language })
     if (sortBy) params.set('sortBy', sortBy)
     upstream = `https://newsapi.org/v2/everything?${params}`
   } else {
     const params = new URLSearchParams({ country, pageSize, apiKey })
     if (category && category !== 'general') params.set('category', category)
+    if (language) params.set('language', language)
+
     upstream = `https://newsapi.org/v2/top-headlines?${params}`
   }
 

@@ -1,7 +1,49 @@
-import { useState, useEffect } from 'react'
-import { cleanTitle, timeAgo, imgSrc, sourceName, FALLBACK_IMG } from '../utils/articleHelpers'
-import styles from './SportsSection.module.css'
-
+import { useState, useEffect } from "react";
+import {
+  cleanTitle,
+  timeAgo,
+  imgSrc,
+  sourceName,
+  FALLBACK_IMG,
+} from "../utils/articleHelpers";
+import styles from "./SportsSection.module.css";
+const FOOTBALL_KEYWORDS = [
+  "Premier League",
+  "La Liga",
+  "Champions League",
+  "Europa League",
+  "Bundesliga",
+  "Serie A",
+  "World Cup",
+  "UEFA",
+  "FIFA",
+  "football",
+  "soccer",
+  "match",
+  "goal",
+  "club",
+  "league",
+  "transfer",
+  "manager",
+  "coach",
+  "midfielder",
+  "striker",
+  "defender",
+];
+const TRUSTED_SOURCES = [
+  "espn",
+  "bbc",
+  "sky",
+  "goal",
+  "cbs sports",
+  "bleacher",
+  "90min",
+  "football london",
+  "givemesport",
+  "marca"
+];
+const BLOCKED =
+  /NFL|American football|Super Bowl|touchdown|quarterback|NBA|cricket|tennis/i;
 function SportsCard({ article, delay }) {
   return (
     <a
@@ -17,53 +59,89 @@ function SportsCard({ article, delay }) {
           src={imgSrc(article)}
           alt={cleanTitle(article.title)}
           loading="lazy"
-          onError={(e) => { e.currentTarget.src = FALLBACK_IMG }}
+          onError={(e) => {
+            e.currentTarget.src = FALLBACK_IMG;
+          }}
         />
         <div className={styles.sportTag}>Football</div>
       </div>
       <div className={styles.body}>
         <div className={styles.kicker}>{sourceName(article)}</div>
         <div className={styles.title}>{cleanTitle(article.title)}</div>
-        <div className={styles.desc}>{article.description || ''}</div>
+        <div className={styles.desc}>{article.description || ""}</div>
         <div className={styles.meta}>{timeAgo(article.publishedAt)}</div>
       </div>
     </a>
-  )
+  );
 }
 
 export default function SportsSection() {
-  const [articles, setArticles] = useState([])
-  const [status, setStatus] = useState('loading')
-  const [tab, setTab] = useState('soccer')
-
+  const [articles, setArticles] = useState([]);
+  const [status, setStatus] = useState("loading");
+  const tab = "football";
   const TABS = [
-    { key: 'soccer',   label: 'Football',   query: 'soccer OR football OR FIFA OR Premier League OR Champions League' },
-    { key: 'nfl',      label: 'NFL',      query: 'NFL OR American football OR touchdown' },
-  ]
+    {
+      key: "football",
+      label: "Football",
+      query:
+        'football OR soccer OR FIFA OR UEFA OR "Premier League" OR "Champions League" OR "World Cup" NOT NFL NOT "American football" NOT cricket NOT tennis NOT NBA',
+    },
+  ];
 
   useEffect(() => {
     async function fetchSports() {
-      setStatus('loading')
+      setStatus("loading");
       try {
-        const current = TABS.find(t => t.key === tab)
+        const current = TABS[0];
         const res = await fetch(
-          `/api/news?q=${encodeURIComponent(current.query)}&sortBy=publishedAt&pageSize=6`
-        )
-        if (!res.ok) throw new Error('Failed')
-        const data = await res.json()
-        const clean = (data.articles || [])
-          .filter(a => a.title && a.title !== '[Removed]')
-          .slice(0, 6)
-        setArticles(clean)
-        setStatus('done')
+          `/api/news?q=${encodeURIComponent(current.query)}&sortBy=publishedAt&pageSize=6&language=en`,
+        );
+        if (!res.ok) throw new Error("Failed");
+        const data = await res.json();
+        const filtered = (data.articles || []).filter((a) => {
+          if (!a.title || a.title === "[Removed]") return false;
+
+          const text = (a.title || "").toLowerCase();
+          const source = (a.source?.name || "").toLowerCase();
+          const isTrusted = TRUSTED_SOURCES.some((s) =>
+            source.includes(s.toLowerCase()),
+          );
+
+          const isFootball =
+            /football|soccer|Premier League|Champions League|UEFA|transfer|club|manager/i.test(
+              text,
+            );
+
+          const isBlocked =
+            /NFL|American football|Super Bowl|NBA|cricket|tennis|election|government|conference|policy/i.test(
+              text,
+            );
+
+          return isTrusted && isFootball && !isBlocked;
+        });
+        const fallback = (data.articles || []).filter((a) => {
+          const text = (a.title || "").toLowerCase();
+
+          return (
+            /football|soccer|premier league|champions league|uefa|transfer/i.test(
+              text,
+            ) && !/nfl|american football|nba|cricket|tennis/i.test(text)
+          );
+        });
+        const clean = [
+          ...filtered,
+          ...fallback.filter((a) => !filtered.includes(a)),
+        ].slice(0, 6);
+        setArticles(clean);
+        setStatus("done");
       } catch {
-        setStatus('error')
+        setStatus("error");
       }
     }
-    fetchSports()
-  }, [tab])
+    fetchSports();
+  }, []);
 
-  if (status === 'error') return null
+  if (status === "error") return null;
 
   return (
     <section className={styles.section}>
@@ -71,29 +149,21 @@ export default function SportsSection() {
       <div className={styles.header}>
         <div className={styles.headerLeft}>
           <h2 className={styles.heading}>Sports Desk</h2>
-          <div className={styles.tabs}>
-            {TABS.map(t => (
-              <button
-                key={t.key}
-                className={`${styles.tabBtn} ${tab === t.key ? styles.activeTab : ''}`}
-                onClick={() => setTab(t.key)}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
         </div>
         <div className={styles.headerLine} />
       </div>
 
       {/* Grid */}
-      {status === 'loading' ? (
+      {status === "loading" ? (
         <div className={styles.grid}>
-          {[1,2,3,4].map(n => (
+          {[1, 2, 3, 4].map((n) => (
             <div key={n}>
               <div className={`skel ${styles.skelImg}`} />
               <div className={`skel ${styles.skelLine}`} />
-              <div className={`skel ${styles.skelLine}`} style={{ width: '65%' }} />
+              <div
+                className={`skel ${styles.skelLine}`}
+                style={{ width: "65%" }}
+              />
             </div>
           ))}
         </div>
@@ -109,5 +179,5 @@ export default function SportsSection() {
         </div>
       )}
     </section>
-  )
+  );
 }
