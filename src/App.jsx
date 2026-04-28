@@ -11,6 +11,7 @@ import RegionalSection from "./components/RegionalSection";
 import Skeleton from "./components/Skeleton";
 import Footer from "./components/Footer";
 import styles from "./App.module.css";
+import SportsSection from './components/SportsSection'
 import { Analytics } from "@vercel/analytics/react";
 export default function App() {
   const [category, setCategory] = useState("general");
@@ -43,6 +44,7 @@ export default function App() {
               <HeroArticle article={hero} />
               <Sidebar articles={sidebar} />
             </div>
+            {category === 'sports' && <SportsSection />}
             <ArticleGrid articles={grid} />
             {category === "general" && <RegionalSection />}
           </>
